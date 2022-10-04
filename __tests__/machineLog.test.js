@@ -1,3 +1,16 @@
+/*
+File: machineLog.test.js
+Version: 1.0.0
+Project: NGA
+Description: Tests for the machinelogs
+File Created: Tuesday, 04 October 2022 17:27
+Author: Eric Damschroder (edamschroder@siliconmtn.com)
+ -----
+Last Modified:
+ -----
+Copyright 2022, Silicon Mountain Technologies, Inc.
+*/
+
 const Context = require("../src/vo/Context");
 const MachineLog = require("../src/vo/MachineLog");
 

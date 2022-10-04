@@ -1,3 +1,16 @@
+/*
+File: logger-middleware.test.js
+Version: 1.0.0
+Project: NGA
+Description: Tests for the logger middleware
+File Created: Tuesday, 04 October 2022 17:27
+Author: Eric Damschroder (edamschroder@siliconmtn.com)
+ -----
+Last Modified:
+ -----
+Copyright 2022, Silicon Mountain Technologies, Inc.
+*/
+
 const mw = require("../src/logger-middleware");
 const Producer = require("@siliconmtn/spacelibs-js/core/io/Messaging/Producer");
 const { v4: uuidv4 } = require("uuid");
