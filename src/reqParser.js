@@ -1,3 +1,17 @@
+
+/*
+File: reqParser.js
+Version: 1.0.0
+Project: NGA
+Description: Render a request url into a data map
+File Created: Tuesday, 04 October 2022 17:11
+Author: Eric Damschroder (edamschroder@siliconmtn.com)
+ -----
+Last Modified:
+ -----
+Copyright 2022, Silicon Mountain Technologies, Inc.
+*/
+
 const url = require("url");
 
 const parseRequest = function (req) {

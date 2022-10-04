@@ -1,3 +1,16 @@
+/*
+File: MachineLog.js
+Version: 1.0.0
+Project: NGA
+Description: Data object contining information for a machine log to be sent to the back end and saved
+File Created: Tuesday, 04 October 2022 17:22
+Author: Eric Damschroder (edamschroder@siliconmtn.com)
+ -----
+Last Modified:
+ -----
+Copyright 2022, Silicon Mountain Technologies, Inc.
+*/
+
 const Context = require("./Context");
 
 class MachineLog {

@@ -1,3 +1,15 @@
+/*
+File: cors.js
+Version: 1.0.0
+Project: NGA
+Description: Base cors setup for services
+File Created: Tuesday, 04 October 2022 17:23
+Author: Eric Damschroder (edamschroder@siliconmtn.com)
+ -----
+Last Modified:
+ -----
+Copyright 2022, Silicon Mountain Technologies, Inc.
+*/
 
 module.exports = function (req, res, next) {
     // CORS headers

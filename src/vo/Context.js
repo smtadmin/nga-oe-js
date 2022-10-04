@@ -1,3 +1,16 @@
+/*
+File: Context.js
+Version: 1.0.0
+Project: NGA
+Description: Data container that holds information related to the current context of the user's session
+File Created: Tuesday, 04 October 2022 17:23
+Author: Eric Damschroder (edamschroder@siliconmtn.com)
+ -----
+Last Modified:
+ -----
+Copyright 2022, Silicon Mountain Technologies, Inc.
+*/
+
 class Context {
   populateContext(data) {
     this.userId = data.userId;

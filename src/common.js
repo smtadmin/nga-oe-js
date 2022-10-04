@@ -1,9 +1,19 @@
-
+/*
+File: common.js
+Version: 1.0.0
+Project: NGA
+Description: A collection of methods commonly used to setup an app
+File Created: Tuesday, 04 October 2022 17:16
+Author: Eric Damschroder (edamschroder@siliconmtn.com)
+ -----
+Last Modified:
+ -----
+Copyright 2022, Silicon Mountain Technologies, Inc.
+*/
 
 /**
  * Normalize a port into a number, string, or false.
  */
-
  const normalizePort = function (val) {
     let checkPort = parseInt(val, 10);
   
@@ -20,6 +30,12 @@
     return false;
   }
   
+  /**
+   * Create pulsar listener that will send the recieved messages to a websocket
+   * @param {*} server 
+   * @param {*} topic 
+   * @param {*} name 
+   */
   const createPulsarWSManager = function (server, topic, name) {
 
     const WSManager = require("./wsManager");
@@ -52,6 +68,11 @@
     );
   }
 
+  /**
+   * Creates a collection of rolling log files for errors and accessess to be saved to
+   * @param {*} app 
+   * @param {*} dir 
+   */
   const createMorganLogger = function(app, dir) {
     const path = require("path");
     const morgan = require("morgan");
@@ -98,7 +119,7 @@
 
 
 /**
- * Event listener for HTTP server "error" event.
+ * Standard error handler for ERROR events
  */
 
 const errorHandler = function(error) {

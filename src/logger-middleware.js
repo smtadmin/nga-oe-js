@@ -1,3 +1,16 @@
+/*
+File: logger-middleware.js
+Version: 1.0.0
+Project: NGA
+Description: middleware wrapper that sends logging requests out before and after function calls
+File Created: Tuesday, 04 October 2022 17:15
+Author: Eric Damschroder (edamschroder@siliconmtn.com)
+ -----
+Last Modified:
+ -----
+Copyright 2022, Silicon Mountain Technologies, Inc.
+*/
+
 /**
  * File is responsible for managing the apect like interactions around logging.
  */
