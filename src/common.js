@@ -49,13 +49,15 @@ Copyright 2022, Silicon Mountain Technologies, Inc.
      * Create the configuration for the producer and consumer
      */
     let consumerConfig = {
-        host: "pulsar://" + process.env.PULSAR_SERVER_PORT_6650_TCP_ADDR,
-        port: process.env.PULSAR_SERVER_SERVICE_PORT_PULSAR,
+        path : process.env.PULSAR_CLIENT_URL,
+        jwtToken : process.env.PULSAR_ADMIN_JWT_TOKEN,
+        tlsAllowInsecureConnection : process.env.PULSAR_TLS_ALLOW_INSECURE_CONNECTIONS
     };
 
     let producerConfig = {
-        host: "pulsar://" + process.env.PULSAR_SERVER_PORT_6650_TCP_ADDR,
-        port: process.env.PULSAR_SERVER_SERVICE_PORT_PULSAR,
+      path : process.env.PULSAR_CLIENT_URL,
+      jwtToken : process.env.PULSAR_ADMIN_JWT_TOKEN,
+      tlsAllowInsecureConnection : process.env.PULSAR_TLS_ALLOW_INSECURE_CONNECTIONS
     };
 
     /**
