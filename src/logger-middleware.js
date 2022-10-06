@@ -45,7 +45,7 @@ Copyright 2022, Silicon Mountain Technologies, Inc.
      let config = {};
      config.path = process.env.PULSAR_CLIENT_URL;
      config.jwtToken = process.env.PULSAR_ADMIN_JWT_TOKEN;
-     config.tlsAllowsInsecureConnection = process.env.PULSAR_TLS_ALLOW_INSECURE_CONNECTIONS;
+     config.tlsAllowInsecureConnection = process.env.PULSAR_TLS_ALLOW_INSECURE_CONNECTION;
      let p = new Producer(config);
      let ml = buildMachineLogMessage(eventTypeCd, log, data);
      let props = {
