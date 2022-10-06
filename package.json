@@ -1,6 +1,6 @@
 {
-  "name": "nga-libs",
-  "version": "0.0.1",
+  "name": "@siliconmtn/nga-oe-js",
+  "version": "0.0.2",
   "private": false,
   "scripts": {
     "start": "node ./src/index",
@@ -44,7 +44,18 @@
     "supertest": "^6.2.4"
   },
   "main": "index.js",
-  "author": "",
+  "author": "Silicon Mountain Technologies",
   "license": "ISC",
-  "description": ""
+  "description": "Shared js libraries for NGA.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smtadmin/nga-oe-js.git"
+  },
+  "keywords": [
+    "NGA"
+  ],
+  "bugs": {
+    "url": "https://github.com/smtadmin/nga-oe-js/issues"
+  },
+  "homepage": "https://github.com/smtadmin/nga-oe-js#readme"
 }

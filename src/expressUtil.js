@@ -2,7 +2,7 @@
 File: common.js
 Version: 1.0.0
 Project: NGA
-Description: A collection of methods commonly used to setup an app
+Description: A collection of methods commonly used to setup an express app
 File Created: Tuesday, 04 October 2022 17:16
 Author: Eric Damschroder (edamschroder@siliconmtn.com)
  -----
@@ -49,13 +49,15 @@ Copyright 2022, Silicon Mountain Technologies, Inc.
      * Create the configuration for the producer and consumer
      */
     let consumerConfig = {
-        host: "pulsar://" + process.env.PULSAR_SERVER_PORT_6650_TCP_ADDR,
-        port: process.env.PULSAR_SERVER_SERVICE_PORT_PULSAR,
+        path : process.env.PULSAR_CLIENT_URL,
+        jwtToken : process.env.PULSAR_ADMIN_JWT_TOKEN,
+        tlsAllowInsecureConnection : process.env.PULSAR_TLS_ALLOW_INSECURE_CONNECTION
     };
 
     let producerConfig = {
-        host: "pulsar://" + process.env.PULSAR_SERVER_PORT_6650_TCP_ADDR,
-        port: process.env.PULSAR_SERVER_SERVICE_PORT_PULSAR,
+      path : process.env.PULSAR_CLIENT_URL,
+      jwtToken : process.env.PULSAR_ADMIN_JWT_TOKEN,
+      tlsAllowInsecureConnection : process.env.PULSAR_TLS_ALLOW_INSECURE_CONNECTION
     };
 
     /**
