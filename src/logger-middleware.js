@@ -54,12 +54,15 @@ Copyright 2022, Silicon Mountain Technologies, Inc.
        "sessionId": data.sessionId
      }
      console.log(props);
-     await p.sendMessage(
+     return await p.sendMessage(
        process.env.NODE_SERVER_MFDB_TOPIC,
        ml,
        props
      );
-   } catch (e) {}
+   } catch (e) {
+    console.error(e);
+    return false;
+   }
  };
  
  const buildMachineLogMessage = function (eventTypeCd, log, data) {

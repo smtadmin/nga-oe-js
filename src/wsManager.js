@@ -49,7 +49,7 @@ class WSManager {
         topic,
         consumerName,
         async (message, msgConsumer) => {
-          this.processMessage(message, msgConsumer);
+          this.processMessage(message, msgConsumer, topic !== process.env.NODE_SERVER_MFDB_TOPIC);
         }
       );
       await mw.sendLog("EVENT_INFO", `WSS Established for ${consumerName}`, ws.userId);
@@ -65,7 +65,7 @@ class WSManager {
     this.wss.on('message', function incoming(message) {console.log('received: %s', message);});
   }
 
-  async processMessage(message, msgConsumer) {
+  async processMessage(message, msgConsumer, sendLog) {
     let userId = "1234";
     let json = {};
     try {
@@ -76,10 +76,12 @@ class WSManager {
       userId = message.getData().userId;
     }
 
-    await mw.sendLog("EVENT_START", 
-      `${this.consumerName} Received a Message`,
-      message.getData().toString()
-    );
+    if(sendLog) {
+      await mw.sendLog("EVENT_START", 
+        `${this.consumerName} Received a Message`,
+        message.getData().toString()
+      );
+    }
 
     try {
       this.wss.clients.forEach((client) => {
@@ -89,10 +91,12 @@ class WSManager {
       });
     } catch (err) {}
     msgConsumer.acknowledge(message);
-    await mw.sendLog("EVENT_END", 
-      `${this.consumerName} Finished Processing Message`,
-      message.getData().toString()
-    );
+    if(sendLog) {
+      await mw.sendLog("EVENT_END", 
+        `${this.consumerName} Finished Processing Message`,
+        message.getData().toString()
+      );
+    }
     return JSON.parse(message.getData().toString());
   }
 

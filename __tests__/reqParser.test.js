@@ -23,7 +23,22 @@ describe("App Tests", () => {
     expect(res.abcd).toBe("1234");
     expect(res.test).toBe("true");
   });
-  test("Parse Post", () => {
+  test("Parse Post With Query", () => {
+    let req = jest.fn();
+    req.method = "POST";
+    req.body = {
+      abcd: "1234",
+      test: true,
+    };
+    req.url = "https://localhost?a1234=abcdefg";
+    req.query = "a1234=abcdefg"
+
+    let res = parseRequest(req);
+    expect(res.abcd).toBe("1234");
+    expect(res.test).toBe(true);
+    expect(res.a1234).toBe("abcdefg");
+  });
+  test("Parse Post Without Query", () => {
     let req = jest.fn();
     req.method = "POST";
     req.body = {
