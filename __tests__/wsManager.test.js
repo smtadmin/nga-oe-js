@@ -44,11 +44,15 @@ class ChatApp {
  * Create a dummy Message to simulate messages from the listener.
  */
 class Message {
-  constructor(data) {
+  constructor(data, properties = {}) {
     this.data = data;
+    this.properties = properties;
   }
   getData() {
     return this.data;
+  }
+  getProperties() {
+    return this.properties;
   }
 }
 

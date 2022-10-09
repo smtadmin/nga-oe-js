@@ -38,11 +38,6 @@ Copyright 2022, Silicon Mountain Technologies, Inc.
  
  const afterMiddleware = async function (_req, _res, next) {
    await sendLog("EVENT_END", "Request Finished Processing", parseRequest(_req));
-
-   //Check if the response has been returned.  If so we shouldn't call next();
-   if(!_res.writableEnded()) {
-    next();
-   }
  };
  
  const sendLog = async function (eventTypeCd, log, data = {}) {
