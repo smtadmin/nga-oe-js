@@ -13,7 +13,7 @@
     "check-format": "prettier --check ."
   },
   "dependencies": {
-    "@siliconmtn/spacelibs-js": "^0.0.25",
+    "@siliconmtn/spacelibs-js": "^0.0.26",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "~4.16.1",
