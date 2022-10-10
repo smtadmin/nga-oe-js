@@ -31,16 +31,16 @@ Copyright 2022, Silicon Mountain Technologies, Inc.
  };
  
  const beforeMiddleware = async function (_req, _res, next) {
+  sanitize(_req);
    await sendLog("EVENT_START", "Request Start Processing", parseRequest(_req));
    next();
  };
  
  const afterMiddleware = async function (_req, _res, next) {
    await sendLog("EVENT_END", "Request Finished Processing", parseRequest(_req));
-   next();
  };
  
- const sendLog = async function (eventTypeCd, log, data) {
+ const sendLog = async function (eventTypeCd, log, data = {}) {
    try {
      let config = {};
      config.path = process.env.PULSAR_CLIENT_URL;
@@ -65,7 +65,21 @@ Copyright 2022, Silicon Mountain Technologies, Inc.
    }
  };
  
- const buildMachineLogMessage = function (eventTypeCd, log, data) {
+ const sanitize = function(_req) {
+  let data = parseRequest(_req);
+
+  if (!(data.sessionId && uuidValidate(data.sessionId))) {
+    _req.query.sessionId = uuidv4();
+    _req.url = _req.url + (_req.url.indexOf('?') === -1 ? '?' : '&') + `sessionId=${_req.query.sessionId}`;
+  }
+
+  if (!(data.transactionId && uuidValidate(data.transactionId))) {
+    _req.query.transactionId = uuidv4();
+    _req.url = _req.url + (_req.url.indexOf('?') === -1 ? '?' : '&') + `transactionId=${_req.query.transactionId}`;
+  }
+ }
+
+ const buildMachineLogMessage = function (eventTypeCd, log, data = {}) {
    let ml = new MachineLog();
    ml.populate({
      eventTypeCd: eventTypeCd,
@@ -104,5 +118,6 @@ Copyright 2022, Silicon Mountain Technologies, Inc.
    afterMiddleware,
    sendLog,
    buildMachineLogMessage,
+   sanitize
  };
  

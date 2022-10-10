@@ -12,6 +12,7 @@ Copyright 2022, Silicon Mountain Technologies, Inc.
 */
 
 const mw = require("../src/logger-middleware");
+const {parseRequest} = require('../src/reqParser');
 const Producer = require("@siliconmtn/spacelibs-js/core/io/Messaging/Producer");
 const { v4: uuidv4 } = require("uuid");
 
@@ -34,7 +35,7 @@ describe("Logger Middleware Tests", () => {
   });
 
   test("sendLog Error", async () => {
-    let res = await mw.sendLog("Test", "Data");
+    let res = await mw.sendLog("Test", "Data", null);
     expect(res).toBe(false);
   });
 
@@ -48,7 +49,17 @@ describe("Logger Middleware Tests", () => {
     expect(res).toBeTruthy();
   });
 
-  test("buildMachineLog with User", () => {    
+  test("sendLog with Defaults", async () => {
+    let res = await mw.sendLog("Test", "Data");
+    expect(res).toBeTruthy();
+  });
+
+  test("buildMachineLog with defaults", () => {
+    let data = mw.buildMachineLogMessage("EVENT_INFO", "Test");
+    expect(data.data.userId).toBe(undefined);
+  });
+
+  test("buildMachineLog with User", () => {
     let userId = uuidv4();
     let data = mw.buildMachineLogMessage("EVENT_INFO", "Test", {
       userId: userId,
@@ -75,16 +86,111 @@ describe("Logger Middleware Tests", () => {
   test("Testing BeforeMiddleware", () => {
     let next = jest.fn();
     let req = jest.fn();
+    let res = jest.fn();
+    res.writableEnded = jest.fn(() => {return false;})
     req.url = "localhost";
+    req.query = {};
     mw.sendLog = jest.fn();
-    mw.beforeMiddleware(req, jest.fn(), next);
+    mw.beforeMiddleware(req, res, next);
   });
 
-  test("Testing AfterMiddleware", () => {
+  test("Testing AfterMiddleware Continue", () => {
     let next = jest.fn();
     mw.sendLog = jest.fn();
+    let res = jest.fn();
+    res.writableEnded = jest.fn(() => {return false;})
     let req = jest.fn();
+    req.query = {};
     req.url = "localhost";
-    mw.afterMiddleware(req, jest.fn(), next);
+    mw.afterMiddleware(req, res, next);
+  });
+
+  test("Testing AfterMiddleware No Continue", () => {
+    let next = jest.fn();
+    mw.sendLog = jest.fn();
+    let res = jest.fn();
+    res.writableEnded = jest.fn(() => {return true;})
+    let req = jest.fn();
+    req.query = {};
+    req.url = "localhost";
+    mw.afterMiddleware(req, res, next);
+  });
+
+  test("Parse Sanitize All Missing.", () => {
+    let req = jest.fn();
+    req.method = "POST";
+    req.body = {
+      abcd: "1234",
+      test: true,
+    };
+    req.url = "https://localhost?a1234=abcdefg";
+    req.query = {a1234: "abcdefg"};
+
+    mw.sanitize(req);
+
+    let res = parseRequest(req);
+    expect(res.abcd).toBe("1234");
+    expect(res.test).toBe(true);
+    expect(res.a1234).toBe("abcdefg");
+    expect(res.sessionId).toBeTruthy();
+    expect(res.transactionId).toBeTruthy();
+    expect(res.userId).toBeFalsy();
+  });
+
+  test("Parse Sanitize transactionId invalid.", () => {
+    let req = jest.fn();
+    req.method = "POST";
+    req.body = {
+      transactionId: "1234",
+      test: true,
+    };
+    req.url = "https://localhost";
+    req.query = {};
+
+    mw.sanitize(req);
+
+    let res = parseRequest(req);
+    expect(res.sessionId).toBeTruthy();
+    expect(res.test).toBe(true);
+    expect(res.transactionId).toBeTruthy();
+    expect(res.userId).toBeFalsy();
+  });
+
+  test("Parse Sanitize transactionId Missing.", () => {
+    let req = jest.fn();
+    req.method = "POST";
+    req.body = {
+      sessionId: uuidv4(),
+      test: true,
+    };
+    req.url = "https://localhost";
+    req.query = {};
+
+    mw.sanitize(req);
+
+    let res = parseRequest(req);
+    expect(res.sessionId).toBe(req.body.sessionId);
+    expect(res.test).toBe(true);
+    expect(res.transactionId).toBeTruthy();
+    expect(res.userId).toBeFalsy();
+  });
+
+  test("Parse Sanitize sessionId Missing.", () => {
+    let req = jest.fn();
+    req.method = "POST";
+    req.body = {
+      transactionId: uuidv4(),
+      test: true,
+    };
+    req.url = "https://localhost";
+    req.query = {};
+
+    mw.sanitize(req);
+
+    let res = parseRequest(req);
+    expect(res.transactionId).toBe(req.body.transactionId);
+    expect(res.test).toBe(true);
+    expect(res.sessionId).toBeTruthy();
+    expect(res.userId).toBeFalsy();
   });
 });

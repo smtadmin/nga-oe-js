@@ -16,6 +16,7 @@ const {parseRequest} = require('./reqParser');
 const Consumer = require("@siliconmtn/spacelibs-js/core/io/Messaging/Consumer");
 const mw = require('./logger-middleware');
 const { validate: validateUUID } = require("uuid");
+const { v4: uuidv4 } = require("uuid");
 
 class WSManager {
   /**
@@ -32,7 +33,7 @@ class WSManager {
 
   async connect(topic, consumerName) {
     this.consumerName = consumerName;
-    await mw.sendLog("EVENT_INFO", `Awaiting ${consumerName} WSS Request`);
+    await mw.sendLog("EVENT_INFO", `Awaiting ${consumerName} WSS Request`, {});
     this.wss.on("connection", async (ws, req) => {
       console.log("WSS CONNECTION INITIATED!");
       this.identifyWebSocket(ws, req);
@@ -41,7 +42,7 @@ class WSManager {
         await this.topicConsumer.disconnect();
         await mw.sendLog("EVENT_INFO", 
           "Re-Established Consumer after new connection detected",
-          ws.userId
+          {"userId": ws.userId}
         );
       }
 
@@ -52,7 +53,7 @@ class WSManager {
           this.processMessage(message, msgConsumer, topic !== process.env.NODE_SERVER_MFDB_TOPIC);
         }
       );
-      await mw.sendLog("EVENT_INFO", `WSS Established for ${consumerName}`, ws.userId);
+      await mw.sendLog("EVENT_INFO", `WSS Established for ${consumerName}`, {"userId": ws.userId});
       console.log("CONNECTION CREATED, RETURNING!");
     });
 
@@ -68,18 +69,33 @@ class WSManager {
   async processMessage(message, msgConsumer, sendLog) {
     let userId = "1234";
     let json = {};
+    let properties = message.getProperties();
+    console.log(properties);
     try {
       json = JSON.parse(message.getData().toString());
+      console.log("Received Message: ", json);
+
+      json = {...properties, ...json};
+      console.log("Merged Properties Message Data: ", json);
     } catch (err) {}
 
     if (json.userId && validateUUID(json.userId)) {
-      userId = message.getData().userId;
+      userId = json.userId;
     }
+
+    if(!json.transactionId) {
+      json.transactionId = uuidv4();
+    }
+
+    if(!json.sessionId) {
+      json.sessionId = uuidv4();
+    }
+
 
     if(sendLog) {
       await mw.sendLog("EVENT_START", 
         `${this.consumerName} Received a Message`,
-        message.getData().toString()
+        json
       );
     }
 
@@ -94,10 +110,10 @@ class WSManager {
     if(sendLog) {
       await mw.sendLog("EVENT_END", 
         `${this.consumerName} Finished Processing Message`,
-        message.getData().toString()
+        json
       );
     }
-    return JSON.parse(message.getData().toString());
+    return json;
   }
 
   identifyWebSocket(ws, req) {

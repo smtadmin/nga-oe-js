@@ -20,7 +20,7 @@ Consumer.prototype.connect = jest.fn();
 
 // Create the Mocked Server
 const fakeURL = "ws://localhost:8080";
-const mockServer = new ServerMocker.Server(fakeURL);
+let mockServer = new ServerMocker.Server(fakeURL);
 
 /**
  * Create a dummy app for simulating connections and tracking
@@ -44,17 +44,24 @@ class ChatApp {
  * Create a dummy Message to simulate messages from the listener.
  */
 class Message {
-  constructor(data) {
+  constructor(data, properties = {}) {
     this.data = data;
+    this.properties = properties;
   }
   getData() {
     return this.data;
+  }
+  getProperties() {
+    return this.properties;
   }
 }
 
 describe("WSManager Tests", () => {
   //Instantiate our mockServer for testing
-  const manager = new WSManager(mockServer, {}, {});
+  let manager;
+  beforeEach(() => {
+    manager = new WSManager(mockServer, {}, {});
+  });
 
   test("Testing identifyWebSocket", async () => {
     let req = jest.fn();
@@ -103,7 +110,7 @@ describe("WSManager Tests", () => {
     );
 
     //Simulate Receiving an Async Message and data is properly handled and sent.
-    let msg = new Message('{"msg": "Hello World", "state": "default"}');
+    let msg = new Message(`{"msg": "Hello World", "state": "default", "transactionId": "${uuidv4()}", "sessionId": "${uuidv4()}"}`);
     let msgConsumer = jest.fn();
     msgConsumer.acknowledge = jest.fn();
     await manager.processMessage(msg, msgConsumer, jest.fn());
