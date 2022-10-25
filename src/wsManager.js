@@ -70,13 +70,9 @@ class WSManager {
     let userId = "1234";
     let json = {};
     let properties = message.getProperties();
-    console.log(properties);
     try {
       json = JSON.parse(message.getData().toString());
-      console.log("Received Message: ", json);
-
       json = {...properties, ...json};
-      console.log("Merged Properties Message Data: ", json);
     } catch (err) {}
 
     if (json.userId && validateUUID(json.userId)) {

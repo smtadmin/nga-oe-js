@@ -53,7 +53,6 @@ Copyright 2022, Silicon Mountain Technologies, Inc.
        "userId": data.userId,
        "sessionId": data.sessionId
      }
-     console.log(props);
      return await p.sendMessage(
        process.env.NODE_SERVER_MFDB_TOPIC,
        ml,
